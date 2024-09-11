@@ -1,7 +1,19 @@
-# alist-gallery
-**English** | **[中文](https://github.com/ThinkerWen/alist-gallery/blob/main/README.md)**
+<div align="center">
+  <a href="https://alist.nn.ci"><img width="100px" alt="logo" src="https://cloud.hive-net.cn/gallery-api/fs/show-gallery/2024_09_11_ukNhp1.png"/></a>
+  <p><em>📷Use alist as a graph bed</em></p>
+  <a href="https://img.shields.io/badge/Go-1.22.1-blue">
+    <img src="https://img.shields.io/badge/Go-1.22.1-blue" />
+  </a>
+  <a href="https://github.com/ThinkerWen/alist-gallery/blob/main/LICENSE">
+    <img src="https://img.shields.io/github/license/ThinkerWen/alist-gallery" alt="License" />
+  </a>
+  <a href="https://github.com/alist-org/alist/releases">
+    <img src="https://img.shields.io/github/v/release/ThinkerWen/alist-gallery.svg" alt="latest version" />
+  </a>
+</div>
 
-Use alist as a graph bed
+---
+**English** | **[中文](https://github.com/ThinkerWen/alist-gallery/blob/main/README.md)**
 
 ## Install
 
