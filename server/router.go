@@ -8,6 +8,7 @@ import (
 func RegisterFileSystem(e *echo.Echo) {
 	g := e.Group("/fs")
 
+	g.PUT("/put-gallery", handles.PutGallery)
 	g.PUT("/form-gallery", handles.FormGallery)
 	g.GET("/show-gallery/:name", handles.ShowImage)
 }

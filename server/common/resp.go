@@ -7,7 +7,6 @@ type FsUP struct {
 }
 
 type Data struct {
-	Path string      `json:"path"`
 	Name string      `json:"name"`
 	Url  string      `json:"url"`
 	Task interface{} `json:"task"`

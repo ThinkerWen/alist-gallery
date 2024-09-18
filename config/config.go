@@ -1,7 +1,9 @@
 package config
 
 import (
+	"database/sql"
 	"github.com/charmbracelet/log"
+	_ "github.com/mattn/go-sqlite3"
 	"gopkg.in/yaml.v3"
 	"os"
 	"sync"
@@ -16,6 +18,7 @@ type Config struct {
 	Password        string `yaml:"password"`
 }
 
+var DB *sql.DB
 var CONFIG Config
 var mu sync.Mutex
 
@@ -29,6 +32,9 @@ func init() {
 		}
 	} else if err = yaml.Unmarshal(yamlFile, &CONFIG); err != nil {
 		log.Fatalf("Error unmarshalling YAML: %v", err)
+	}
+	if err = createDatabase(); err != nil {
+		log.Fatalf("Error creating database: %v", err)
 	}
 
 	log.Info("Load config successfully")
@@ -45,6 +51,27 @@ func initDefaultConfig() {
 
 	CONFIG = *config
 	log.Info("Set default config successfully")
+}
+
+func createDatabase() error {
+	var err error
+	if DB, err = sql.Open("sqlite3", "gallery.db"); err != nil {
+		return err
+	}
+
+	createGalleryIndex := `
+		CREATE TABLE IF NOT EXISTS "gallery_index" (
+		id         integer                                not null
+			primary key autoincrement,
+		path       varchar(255) default ''                not null,
+		user       varchar(255) default ''                not null,
+		image_name varchar(255) default ''                not null,
+		created_at timestamp    default CURRENT_TIMESTAMP not null)`
+	if _, err = DB.Exec(createGalleryIndex); err != nil {
+		return err
+	}
+
+	return nil
 }
 
 // SaveConfig 将配置保存回文件
