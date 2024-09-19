@@ -1,13 +1,13 @@
 <div align="center">
   <a href="https://alist.nn.ci"><img width="100px" alt="logo" src="https://cloud.hive-net.cn/gallery-api/fs/show-gallery/2024_09_11_ukNhp1.png"/></a>
   <p><em>📷Use alist as a graph bed</em></p>
-  <a href="https://img.shields.io/badge/Go-1.22.1-blue">
+  <a href="https://go.dev/dl/">
     <img src="https://img.shields.io/badge/Go-1.22.1-blue" />
   </a>
   <a href="https://github.com/ThinkerWen/alist-gallery/blob/main/LICENSE">
     <img src="https://img.shields.io/github/license/ThinkerWen/alist-gallery" alt="License" />
   </a>
-  <a href="https://github.com/alist-org/alist/releases">
+  <a href="https://github.com/ThinkerWen/alist-gallery/releases">
     <img src="https://img.shields.io/github/v/release/ThinkerWen/alist-gallery.svg" alt="latest version" />
   </a>
 </div>
@@ -33,9 +33,12 @@ port: 5243  # alist-gallery service port
 alist-host: https://assets.example.com # alist domain
 gallery-location: https://assets.example.com:5243 # alist-gallery service location
 storage-path: /Storage/Gallery # The path where the graph bed is stored in the alist
-alist-token: alist-4254afdc-1acg-1999-08aa-b6134kx4kv63FdkHJFPeaFDdEGYmSe29KETy4fdsareKM8fdsagfdsgfdgfdagdfgr # alist service token (can view image)
+alist-token: alist-4254afdc-1acg-1999-08aa-b6134kx4kv63FdkHJFPeaFDdEGYmSe29KETy4fdsareKM8fdsagfdsgfdgfdagdfgr # alist service token
 password: "" # Folder password for storage path (optional)
 ```
+
+## Synchronize existing data
+After creating and modifying the config.yaml, run the `sh sync.sh` command to synchronize the image data in the current storage-path to the SQLite database before the gallery.db is generated
 
 ## Extension
 
@@ -65,19 +68,17 @@ Thus the gallery-location changes from `https://assets.example.com:5243` to `htt
 **PUT** `/fs/form-gallery`
 > Body request parameters
 ```json
-file: []
+{"file": "content"}
 ```
 #### Request parameters
-| Name           | location | type           | must-have | introduce                                                 |
-|----------------|----------|----------------|-----------|-----------------------------------------------------------|
-| Authorization  | header   | string         | 是         | Token                                                     |
-| Content-Type   | header   | string         | 是         | Must be multipart/form-data;                              |
-| Content-Length | header   | string         | 是         | File size                                                 |
-| File-Path      | header   | string         | 是         | Full file path (optional with File-Name, File-Path first) |
-| File-Name      | header   | string         | 是         | File name (optionally with File-Path, File-Path first)    |
-| As-Task        | header   | string         | 否         | Whether to add it as a task                               |
-| body           | body     | object         | 否         |                                                           |
-| » file         | body     | string(binary) | 是         | File                                                      |
+| Name           | location | type           | must-have | introduce                             |
+|----------------|----------|----------------|-----------|---------------------------------------|
+| Authorization  | header   | string         | 是         | Token                                 |
+| Content-Type   | header   | string         | 是         | Must be multipart/form-data;          |
+| File-Name      | header   | string         | 是         | File name (guarantee unique required) |
+| As-Task        | header   | string         | 否         | Whether to add it as a task           |
+| body           | body     | object         | 否         |                                       |
+| » file         | body     | string(binary) | 是         | File                                  |
 #### Response example
 > Success
 ```json
@@ -98,7 +99,42 @@ file: []
     }
   }
 }
+```
 
+### PUT stream upload file
+**PUT** `/fs/put-gallery`
+> Body request parameters
+```text
+string
+```
+#### Request parameters
+| Name           | location | type           | must-have | introduce                             |
+|----------------|----------|----------------|-----------|---------------------------------------|
+| Authorization  | header   | string         | 是         | Token                                 |
+| Content-Type   | header   | string         | 是         |                                       |
+| File-Name      | header   | string         | 是         | File name (guarantee unique required) |
+| As-Task        | header   | string         | 否         | Whether to add it as a task           |
+| body           | body     | string(binary) | 否         | File                                  |
+#### Response example
+> Success
+```json
+{
+  "code": 200,
+  "message": "success",
+  "data": {
+    "name": "animated_zoom.gif",
+    "path": "/Storage/Gallery/animated_zoom.gif",
+    "url": "https://assets.example.com:5243/fs/show-gallery/animated_zoom.gif",
+    "task": {
+      "id": "sdH2LbjyWRk",
+      "name": "upload animated_zoom.gif to [/data](/alist)",
+      "state": 0,
+      "status": "uploading",
+      "progress": 0,
+      "error": ""
+    }
+  }
+}
 ```
 
 ### GET display image

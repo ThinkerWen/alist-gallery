@@ -22,7 +22,6 @@
 go.work
 
 /.idea
-*.sh
 *.log
 *.yml
 *.yaml
