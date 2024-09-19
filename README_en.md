@@ -12,6 +12,10 @@
   </a>
 </div>
 
+<div align="center">
+<p><em>Developed in Go language, it has a very low memory of only 10MB and includes the minimum available solution for user-managed graph beds</em></p>
+</div>
+
 ---
 **English** | **[中文](https://github.com/ThinkerWen/alist-gallery/blob/main/README.md)**
 

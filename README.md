@@ -12,6 +12,10 @@
   </a>
 </div>
 
+<div align="center">
+<p><em>Go语言开发，仅10MB极低内存占用，包含用户管理的图床最小可用方案</em></p>
+</div>
+
 ---
 **中文** | **[English](./README_en.md)**
 
