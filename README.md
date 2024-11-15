@@ -27,7 +27,7 @@
 ```bash
 mkdir /etc/alist-gallery
 vim /etc/alist-gallery/config.yaml  # 配置文件⬇️
-docker run -d --restart=unless-stopped -v /etc/alist-gallery/config.yaml:/app/config.yaml -p 5243:5243 --name="alist-gallery" designerwang/alist-gallery:latest
+docker run -d --restart=unless-stopped -v /etc/alist-gallery/config.yaml:/app/config.yaml  -p 5243:5243 --name="alist-gallery" designerwang/alist-gallery:latest
 ```
 ### 2.可执行文件
 在 [releases](https://github.com/ThinkerWen/alist-gallery/releases) 下载对应平台的可执行文件在本地运行
@@ -44,7 +44,9 @@ password: "" # 存储路径的文夹及密码(可选)
 ```
 
 ## 同步已有数据
-创建并修改完config.yaml后，在没生成gallery.db前，执行`sh sync.sh`同步当前`storage-path`下的图片数据到SQLite数据库中，完成同步
+进入alist-gallery的docker容器中，并将项目中`sync.sh`文件拷贝到`config.yaml`同一目录下，执行`sh sync.sh`
+
+即可同步当前`storage-path`下的图片数据到SQLite数据库中，完成同步
 
 ## 扩展
 

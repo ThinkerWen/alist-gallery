@@ -23,7 +23,6 @@ go.work
 
 /.idea
 *.log
-*.yml
 *.yaml
 *.json
 *.db
