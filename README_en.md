@@ -79,12 +79,12 @@ Thus the gallery-location changes from `https://assets.example.com:5243` to `htt
 #### Request parameters
 | Name           | location | type           | must-have | introduce                             |
 |----------------|----------|----------------|-----------|---------------------------------------|
-| Authorization  | header   | string         | 是         | Token                                 |
-| Content-Type   | header   | string         | 是         | Must be multipart/form-data;          |
-| File-Name      | header   | string         | 是         | File name (guarantee unique required) |
-| As-Task        | header   | string         | 否         | Whether to add it as a task           |
-| body           | body     | object         | 否         |                                       |
-| » file         | body     | string(binary) | 是         | File                                  |
+| Authorization  | header   | string         | yes         | Token                                 |
+| Content-Type   | header   | string         | yes         | Must be multipart/form-data;          |
+| File-Name      | header   | string         | yes         | File name (guarantee unique required) |
+| As-Task        | header   | string         | no         | Whether to add it as a task           |
+| body           | body     | object         | no         |                                       |
+| » file         | body     | string(binary) | yes         | File                                  |
 #### Response example
 > Success
 ```json
@@ -116,11 +116,11 @@ string
 #### Request parameters
 | Name           | location | type           | must-have | introduce                             |
 |----------------|----------|----------------|-----------|---------------------------------------|
-| Authorization  | header   | string         | 是         | Token                                 |
-| Content-Type   | header   | string         | 是         |                                       |
-| File-Name      | header   | string         | 是         | File name (guarantee unique required) |
-| As-Task        | header   | string         | 否         | Whether to add it as a task           |
-| body           | body     | string(binary) | 否         | File                                  |
+| Authorization  | header   | string         | yes         | Token                                 |
+| Content-Type   | header   | string         | yes         |                                       |
+| File-Name      | header   | string         | yes         | File name (guarantee unique required) |
+| As-Task        | header   | string         | no         | Whether to add it as a task           |
+| body           | body     | string(binary) | no         | File                                  |
 #### Response example
 > Success
 ```json
