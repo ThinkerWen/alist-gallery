@@ -2,8 +2,6 @@ package handles
 
 import (
 	"alist-gallery/config"
-	"alist-gallery/internal/db"
-	"alist-gallery/internal/model"
 	"alist-gallery/server/common"
 	"encoding/json"
 	"fmt"
@@ -21,28 +19,23 @@ func FormGallery(c echo.Context) error {
 
 	user, err := common.GetUserName(authorization)
 	if err != nil {
-		return c.JSON(http.StatusBadRequest, map[string]interface{}{"error": "User baned"})
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{"message": "User baned"})
 	}
 
 	file, err := c.FormFile("file")
 	if err != nil {
-		return c.JSON(http.StatusBadRequest, map[string]interface{}{"error": "No file part in the request"})
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{"message": "No file part in the request"})
+	}
+	if fileName == common.Blank {
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{"message": "File name required"})
 	}
 	f, err := file.Open()
 	if err != nil {
 		return err
 	}
 	defer f.Close()
-
-	if fileName == "" {
-		return c.JSON(http.StatusBadRequest, map[string]interface{}{"error": "File name required"})
-	}
-	r, err := common.FsFrom(fmt.Sprintf("%s/%s/%s", config.CONFIG.StoragePath, user, fileName), asTask, f)
+	r, err := common.FsFrom(fmt.Sprintf(common.StorageFormatter, user, fileName), asTask, f)
 	if err != nil {
-		return c.JSON(http.StatusServiceUnavailable, map[string]interface{}{"message": err.Error()})
-	}
-	item := model.GalleryIndex{Path: config.CONFIG.StoragePath, User: user, ImageName: fileName}
-	if err = db.SetIndexItem(item); err != nil {
 		return c.JSON(http.StatusServiceUnavailable, map[string]interface{}{"message": err.Error()})
 	}
 
@@ -53,7 +46,7 @@ func FormGallery(c echo.Context) error {
 	resp.Code = 200
 	resp.Message = "success"
 	resp.Data.Name = fileName
-	resp.Data.Url = config.CONFIG.GalleryLocation + path.Join("/fs/show-gallery", fileName)
+	resp.Data.Url = fmt.Sprintf(common.GalleryFormatter, fileName)
 	return c.JSON(http.StatusOK, *resp)
 }
 
@@ -64,18 +57,15 @@ func PutGallery(c echo.Context) error {
 	asTask := c.Request().Header.Get("As-Task")
 	user, err := common.GetUserName(authorization)
 	if err != nil {
-		return c.JSON(http.StatusBadRequest, map[string]interface{}{"error": "User baned"})
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{"message": "User baned"})
 	}
 
-	if fileName == "" {
-		return c.JSON(http.StatusBadRequest, map[string]interface{}{"error": "File name required"})
+	if fileName == common.Blank {
+		return c.JSON(http.StatusBadRequest, map[string]interface{}{"message": "File name required"})
 	}
+
 	r, err := common.FsStream(path.Join(config.CONFIG.StoragePath, user, fileName), asTask, c.Request().Body)
 	if err != nil {
-		return c.JSON(http.StatusServiceUnavailable, map[string]interface{}{"message": err.Error()})
-	}
-	item := model.GalleryIndex{Path: config.CONFIG.StoragePath, User: user, ImageName: fileName}
-	if err = db.SetIndexItem(item); err != nil {
 		return c.JSON(http.StatusServiceUnavailable, map[string]interface{}{"message": err.Error()})
 	}
 
@@ -86,6 +76,6 @@ func PutGallery(c echo.Context) error {
 	resp.Code = 200
 	resp.Message = "success"
 	resp.Data.Name = fileName
-	resp.Data.Url = config.CONFIG.GalleryLocation + path.Join("/fs/show-gallery", fileName)
+	resp.Data.Url = fmt.Sprintf(common.GalleryFormatter, fileName)
 	return c.JSON(http.StatusOK, *resp)
 }
