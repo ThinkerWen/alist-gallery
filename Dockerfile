@@ -12,6 +12,8 @@ FROM alpine:latest
 
 WORKDIR /app
 COPY --from=builder /app/alist-gallery .
+COPY --from=builder /app/sync.sh .
+RUN chmod +x /app/sync.sh
 
 EXPOSE 5243
-CMD ["/app/alist-gallery"]
+CMD ["/bin/sh", "-c", "/app/sync.sh && /app/alist-gallery"]

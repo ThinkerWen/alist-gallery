@@ -27,7 +27,7 @@ func GetGalleryItem(name string) (model.GalleryIndex, error) {
 }
 
 func SetGalleryItem(item model.GalleryIndex) error {
-	sqlStr := `INSERT INTO gallery_index (path, user, image_name, image_url) VALUES (?, ?, ?)`
+	sqlStr := `INSERT INTO gallery_index (path, user, image_name, image_url) VALUES (?, ?, ?, ?)`
 	if _, err := config.DB.Exec(sqlStr, item.Path, item.User, item.ImageName, item.ImageURL); err != nil {
 		return err
 	}

@@ -2,6 +2,7 @@ package common
 
 import (
 	"alist-gallery/config"
+	"net/url"
 	"path"
 )
 
@@ -12,15 +13,15 @@ var (
 
 	StorageFormatter = path.Join(config.CONFIG.StoragePath, "/%s/%s")
 
-	GalleryFormatter = path.Join(config.CONFIG.GalleryLocation, "/fs/show-gallery", "%s")
+	GalleryFormatter, _ = url.JoinPath(config.CONFIG.GalleryLocation, "/fs/show-gallery", "%s")
 
-	ApiMe = path.Join(config.CONFIG.AListHost, "/api/me")
+	ApiMe, _ = url.JoinPath(config.CONFIG.AListHost, "/api/me")
 
-	ApiFsGet = path.Join(config.CONFIG.AListHost, "/api/fs/get")
+	ApiFsGet, _ = url.JoinPath(config.CONFIG.AListHost, "/api/fs/get")
 
-	ApiFsPut = path.Join(config.CONFIG.AListHost, "/api/fs/put")
+	ApiFsPut, _ = url.JoinPath(config.CONFIG.AListHost, "/api/fs/put")
 
-	ApiFsForm = path.Join(config.CONFIG.AListHost, "/api/fs/form")
+	ApiFsForm, _ = url.JoinPath(config.CONFIG.AListHost, "/api/fs/form")
 
-	ApiFsSearch = path.Join(config.CONFIG.AListHost, "/api/fs/search")
+	ApiFsSearch, _ = url.JoinPath(config.CONFIG.AListHost, "/api/fs/search")
 )

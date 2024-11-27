@@ -9,7 +9,7 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/tidwall/gjson"
 	"net/http"
-	"strings"
+	"path"
 )
 
 // ShowImage 展示图床中图片（非下载）
@@ -40,14 +40,14 @@ func searchImage(name string) (model.GalleryIndex, error) {
 		return model.GalleryIndex{}, err
 	}
 	data := gjson.Get(string(res), "data.content|0")
-	imageLink, err := common.FsGet(data.Get("parent").String())
-	if err != nil {
-		return model.GalleryIndex{}, err
+	imageLink, err := common.FsGet(path.Join(data.Get("parent").String(), data.Get("name").String()))
+	if imageLink == common.Blank || err != nil {
+		return model.GalleryIndex{}, errors.New("alist service image not found")
 	}
 
 	return model.GalleryIndex{
 		Path:      data.Get("parent").String(),
-		User:      strings.Split(data.Get("parent").String(), "/")[1],
+		User:      path.Base(data.Get("parent").String()),
 		ImageName: name,
 		ImageURL:  imageLink,
 	}, nil
