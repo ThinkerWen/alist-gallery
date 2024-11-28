@@ -58,12 +58,14 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GH_PAT }}
         with:
           tag_name: ${{ github.ref_name }}
-          release_name: Release ${{ github.ref_name }}
+          release_name: ${{ github.ref_name }}
           draft: false
           prerelease: false
 
       - name: Upload release assets (Darwin)
         uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_PAT }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: dist/alist-gallery-darwin-amd64-${{ github.ref_name }}
@@ -72,6 +74,8 @@ jobs:
 
       - name: Upload release assets (Linux)
         uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_PAT }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: dist/alist-gallery-linux-amd64-${{ github.ref_name }}
@@ -80,6 +84,8 @@ jobs:
 
       - name: Upload release assets (Windows)
         uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_PAT }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: dist/alist-gallery-windows-amd64-${{ github.ref_name }}.exe
