@@ -38,3 +38,39 @@ jobs:
           tags: |
             docker.io/designerwang/alist-gallery:${{ github.ref_name }}
             docker.io/designerwang/alist-gallery:latest
+
+      - name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: 1.22
+
+      - name: Build binaries for multiple platforms
+        run: |
+          mkdir -p dist
+          GOOS=darwin GOARCH=amd64 go build -o dist/alist-gallery-darwin-amd64-${GITHUB_REF_NAME#refs/tags/}
+          GOOS=linux GOARCH=amd64 go build -o dist/alist-gallery-linux-amd64-${GITHUB_REF_NAME#refs/tags/}
+          GOOS=windows GOARCH=amd64 go build -o dist/alist-gallery-windows-amd64-${GITHUB_REF_NAME#refs/tags/}.exe
+
+      - name: Upload release assets
+        uses: actions/upload-release-asset@v1
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: dist/alist-gallery-darwin-amd64-${GITHUB_REF_NAME#refs/tags/}
+          asset_name: alist-gallery-darwin-amd64-${GITHUB_REF_NAME#refs/tags/}
+          content_type: application/octet-stream
+
+      - name: Upload release assets (Linux)
+        uses: actions/upload-release-asset@v1
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: dist/alist-gallery-linux-amd64-${GITHUB_REF_NAME#refs/tags/}
+          asset_name: alist-gallery-linux-amd64-${GITHUB_REF_NAME#refs/tags/}
+          content_type: application/octet-stream
+
+      - name: Upload release assets (Windows)
+        uses: actions/upload-release-asset@v1
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: dist/alist-gallery-windows-amd64-${GITHUB_REF_NAME#refs/tags/}.exe
+          asset_name: alist-gallery-windows-amd64-${GITHUB_REF_NAME#refs/tags/}.exe
+          content_type: application/octet-stream
