@@ -43,10 +43,11 @@ func FormGallery(c echo.Context) error {
 	if asTask == "true" {
 		resp.Data.Task = json.RawMessage(gjson.Get(string(r), "data.task").String())
 	}
+	go common.FsRefresh()
 	resp.Code = 200
 	resp.Message = "success"
 	resp.Data.Name = fileName
-	resp.Data.Url = fmt.Sprintf(common.GalleryFormatter, fileName)
+	resp.Data.Url = common.GalleryFormatter + fileName
 	return c.JSON(http.StatusOK, *resp)
 }
 
@@ -73,9 +74,10 @@ func PutGallery(c echo.Context) error {
 	if asTask == "true" {
 		resp.Data.Task = json.RawMessage(gjson.Get(string(r), "data.task").String())
 	}
+	go common.FsRefresh()
 	resp.Code = 200
 	resp.Message = "success"
 	resp.Data.Name = fileName
-	resp.Data.Url = fmt.Sprintf(common.GalleryFormatter, fileName)
+	resp.Data.Url = common.GalleryFormatter + fileName
 	return c.JSON(http.StatusOK, *resp)
 }

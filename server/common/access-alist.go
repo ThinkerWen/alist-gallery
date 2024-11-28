@@ -123,3 +123,16 @@ func FsSearch(name string) ([]byte, error) {
 	}
 	return r.Body(), nil
 }
+
+func FsRefresh() {
+	reqBody := map[string]interface{}{
+		"paths":     []string{config.CONFIG.StoragePath},
+		"max_depth": 20,
+	}
+
+	client := resty.New()
+	_, _ = client.R().
+		SetHeader("Authorization", config.CONFIG.AListToken).
+		SetBody(reqBody).
+		Post(ApiIndexUpdate)
+}

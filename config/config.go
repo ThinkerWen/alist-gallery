@@ -60,13 +60,16 @@ func createDatabase() error {
 	}
 
 	createGalleryIndex := `
-		CREATE TABLE IF NOT EXISTS "gallery_index" (
-		id         integer                                not null
-			primary key autoincrement,
-		path       varchar(255) default ''                not null,
-		user       varchar(255) default ''                not null,
-		image_name varchar(255) default ''                not null,
-		created_at timestamp    default CURRENT_TIMESTAMP not null)`
+	CREATE TABLE IF NOT EXISTS gallery_index
+	(
+		id         INTEGER primary key autoincrement,
+		path       VARCHAR(255)  default ''                not null,
+		user       VARCHAR(255)  default ''                not null,
+		image_name VARCHAR(255)  default ''                not null,
+		image_url  varchar(2000) default ''                not null,
+		created_at TIMESTAMP     default CURRENT_TIMESTAMP not null
+	);
+	CREATE UNIQUE INDEX IF NOT EXISTS idx_image_name on gallery_index (image_name);`
 	if _, err = DB.Exec(createGalleryIndex); err != nil {
 		return err
 	}
