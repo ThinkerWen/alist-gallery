@@ -47,30 +47,41 @@ jobs:
       - name: Build binaries for multiple platforms
         run: |
           mkdir -p dist
-          GOOS=darwin GOARCH=amd64 go build -o dist/alist-gallery-darwin-amd64-${GITHUB_REF_NAME#refs/tags/}
-          GOOS=linux GOARCH=amd64 go build -o dist/alist-gallery-linux-amd64-${GITHUB_REF_NAME#refs/tags/}
-          GOOS=windows GOARCH=amd64 go build -o dist/alist-gallery-windows-amd64-${GITHUB_REF_NAME#refs/tags/}.exe
+          GOOS=darwin GOARCH=amd64 go build -o dist/alist-gallery-darwin-amd64-${{ github.ref_name }}
+          GOOS=linux GOARCH=amd64 go build -o dist/alist-gallery-linux-amd64-${{ github.ref_name }}
+          GOOS=windows GOARCH=amd64 go build -o dist/alist-gallery-windows-amd64-${{ github.ref_name }}.exe
 
-      - name: Upload release assets
+      - name: Create GitHub Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GT_PAT }}
+        with:
+          tag_name: ${{ github.ref_name }}
+          release_name: Release ${{ github.ref_name }}
+          draft: false
+          prerelease: false
+
+      - name: Upload release assets (Darwin)
         uses: actions/upload-release-asset@v1
         with:
-          upload_url: ${{ github.event.release.upload_url }}
-          asset_path: dist/alist-gallery-darwin-amd64-${GITHUB_REF_NAME#refs/tags/}
-          asset_name: alist-gallery-darwin-amd64-${GITHUB_REF_NAME#refs/tags/}
-          content_type: application/octet-stream
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: dist/alist-gallery-darwin-amd64-${{ github.ref_name }}
+          asset_name: alist-gallery-darwin-amd64-${{ github.ref_name }}
+          asset_content_type: application/octet-stream
 
       - name: Upload release assets (Linux)
         uses: actions/upload-release-asset@v1
         with:
-          upload_url: ${{ github.event.release.upload_url }}
-          asset_path: dist/alist-gallery-linux-amd64-${GITHUB_REF_NAME#refs/tags/}
-          asset_name: alist-gallery-linux-amd64-${GITHUB_REF_NAME#refs/tags/}
-          content_type: application/octet-stream
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: dist/alist-gallery-linux-amd64-${{ github.ref_name }}
+          asset_name: alist-gallery-linux-amd64-${{ github.ref_name }}
+          asset_content_type: application/octet-stream
 
       - name: Upload release assets (Windows)
         uses: actions/upload-release-asset@v1
         with:
-          upload_url: ${{ github.event.release.upload_url }}
-          asset_path: dist/alist-gallery-windows-amd64-${GITHUB_REF_NAME#refs/tags/}.exe
-          asset_name: alist-gallery-windows-amd64-${GITHUB_REF_NAME#refs/tags/}.exe
-          content_type: application/octet-stream
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: dist/alist-gallery-windows-amd64-${{ github.ref_name }}.exe
+          asset_name: alist-gallery-windows-amd64-${{ github.ref_name }}.exe
+          asset_content_type: application/octet-stream
