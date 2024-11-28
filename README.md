@@ -44,9 +44,7 @@ password: "" # 存储路径的文夹及密码(可选)
 ```
 
 ## 同步已有数据
-进入alist-gallery的docker容器中，并将项目中`sync.sh`文件拷贝到`config.yaml`同一目录下，执行`sh sync.sh`
-
-即可同步当前`storage-path`下的图片数据到SQLite数据库中，完成同步
+配置好`config.yaml`后，浏览器加载图片时自动同步数据，无需人工导入
 
 ## 扩展
 

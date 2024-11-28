@@ -42,9 +42,7 @@ password: "" # Folder password for storage path (optional)
 ```
 
 ## Synchronize existing data
-Login to the docker container of alist-gallery, Copy the `sync.sh` file in the project to the same directory as `config.yaml`, and run command `sh sync.sh`
-
-You can synchronize the image data in the current `storage-path` to the SQLite database to complete the synchronization
+After config.yaml is configured, the data will be automatically synchronized when the image is loaded from browser, and there is no need to manually import it.
 
 ## Extension
 
