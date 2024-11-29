@@ -4,21 +4,32 @@ import (
 	"database/sql"
 	"github.com/charmbracelet/log"
 	_ "github.com/mattn/go-sqlite3"
+	"github.com/redis/go-redis/v9"
 	"gopkg.in/yaml.v3"
 	"os"
 	"sync"
 )
 
 type Config struct {
-	Port            int    `yaml:"port"`
-	AListHost       string `yaml:"alist-host"`
-	GalleryLocation string `yaml:"gallery-location"`
-	StoragePath     string `yaml:"storage-path"`
-	AListToken      string `yaml:"alist-token"`
-	Password        string `yaml:"password"`
+	Port            int         `yaml:"port"`
+	AListHost       string      `yaml:"alist-host"`
+	GalleryLocation string      `yaml:"gallery-location"`
+	StoragePath     string      `yaml:"storage-path"`
+	AListToken      string      `yaml:"alist-token"`
+	Password        string      `yaml:"password"`
+	Redis           RedisConfig `yaml:"redis"`
+}
+type RedisConfig struct {
+	Enable   bool   `yaml:"enable"`
+	Host     string `yaml:"host"`
+	Port     int    `yaml:"port"`
+	Database int    `yaml:"database"`
+	Password string `yaml:"password"`
+	Timeout  int    `yaml:"timeout"`
 }
 
 var DB *sql.DB
+var RDB *redis.Client
 var CONFIG Config
 var mu sync.Mutex
 
@@ -33,48 +44,30 @@ func init() {
 	} else if err = yaml.Unmarshal(yamlFile, &CONFIG); err != nil {
 		log.Fatalf("Error unmarshalling YAML: %v", err)
 	}
-	if err = createDatabase(); err != nil {
-		log.Fatalf("Error creating database: %v", err)
-	}
 
 	log.Info("Load config successfully")
+	initRedis()
+	initSqLite()
 }
 
 func initDefaultConfig() {
-	config := new(Config)
-	config.Port = 5243
-	config.AListHost = "https://assets.example.com"
-	config.StoragePath = "/Storage/Gallery"
-	config.GalleryLocation = "https://assets.example.com:5243"
-	config.AListToken = "alist-4254afdc-1acg-1999-08aa-b6134kx4kv63FdkHJFPeaFDdEGYmSe29KETy4fdsareKM8fdsagfdsgfdgfdagdfgr"
-	config.Password = ""
-
-	CONFIG = *config
+	CONFIG = Config{
+		Port:            5243,
+		AListHost:       "https://assets.example.com",
+		GalleryLocation: "/Storage/Gallery",
+		StoragePath:     "https://assets.example.com:5243",
+		AListToken:      "alist-4254afdc-1acg-1999-08aa-...",
+		Password:        "can be empty",
+		Redis: RedisConfig{
+			Enable:   false,
+			Host:     "127.0.0.1",
+			Port:     6379,
+			Database: 0,
+			Password: "can be empty",
+			Timeout:  60,
+		},
+	}
 	log.Info("Set default config successfully")
-}
-
-func createDatabase() error {
-	var err error
-	if DB, err = sql.Open("sqlite3", "gallery.db"); err != nil {
-		return err
-	}
-
-	createGalleryIndex := `
-	CREATE TABLE IF NOT EXISTS gallery_index
-	(
-		id         INTEGER primary key autoincrement,
-		path       VARCHAR(255)  default ''                not null,
-		user       VARCHAR(255)  default ''                not null,
-		image_name VARCHAR(255)  default ''                not null,
-		image_url  varchar(2000) default ''                not null,
-		created_at TIMESTAMP     default CURRENT_TIMESTAMP not null
-	);
-	CREATE UNIQUE INDEX IF NOT EXISTS idx_image_name on gallery_index (image_name);`
-	if _, err = DB.Exec(createGalleryIndex); err != nil {
-		return err
-	}
-
-	return nil
 }
 
 // SaveConfig 将配置保存回文件

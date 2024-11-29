@@ -124,7 +124,7 @@ func FsSearch(name string) ([]byte, error) {
 	return r.Body(), nil
 }
 
-func FsRefresh() {
+func Refresh() {
 	reqBody := map[string]interface{}{
 		"paths":     []string{config.CONFIG.StoragePath},
 		"max_depth": 20,

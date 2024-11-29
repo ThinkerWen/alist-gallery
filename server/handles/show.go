@@ -1,21 +1,31 @@
 package handles
 
 import (
+	"alist-gallery/config"
 	"alist-gallery/internal/db"
 	"alist-gallery/internal/model"
 	"alist-gallery/server/common"
 	"errors"
+	"fmt"
 	"github.com/go-resty/resty/v2"
 	"github.com/labstack/echo/v4"
 	"github.com/tidwall/gjson"
 	"net/http"
 	"path"
+	"time"
 )
 
 // ShowImage 展示图床中图片（非下载）
 func ShowImage(c echo.Context) error {
 	client := resty.New()
 	name := c.Param("name")
+
+	cacheKey := fmt.Sprintf(common.RedisFormatter, name)
+	cachedImage := db.RedisGet(cacheKey)
+	if cachedImage != "" {
+		return c.Blob(http.StatusOK, "image/png", []byte(cachedImage))
+	}
+
 	item, err := db.GetGalleryItem(name)
 	if err != nil || item.ImageURL == "" {
 		item, err = searchImage(name)
@@ -31,6 +41,9 @@ func ShowImage(c echo.Context) error {
 	if err != nil {
 		return c.JSON(http.StatusServiceUnavailable, map[string]interface{}{"message": err.Error()})
 	}
+
+	db.RedisSet(cacheKey, string(image), time.Duration(config.CONFIG.Redis.Timeout)*time.Minute)
+
 	return c.Blob(http.StatusOK, "image/png", image)
 }
 

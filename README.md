@@ -39,8 +39,15 @@ port: 5243  # alist-gallery 服务端口号
 alist-host: https://assets.example.com # alist域名
 gallery-location: https://assets.example.com:5243 # alist-gallery服务地址
 storage-path: /Storage/Gallery # 图床在alist中的存储路径
-alist-token: alist-4254afdc-1acg-1999-08aa-b6134kx4kv63FdkHJFPeaFDdEGYmSe29KETy4fdsareKM8fdsagfdsgfdgfdagdfgr # alist服务token
+alist-token: alist-4254afdc-1acg-1999-08aa-... # alist服务token
 password: "" # 存储路径的文夹及密码(可选)
+redis:
+  enable: true    # 是否开启Redis缓存
+  host: 127.0.0.1 # Redis连接地址
+  port: 6379      # Redis端口
+  database: 0     # RedisDB序号
+  password: ""    # Redis密码
+  timeout: 60     # 缓存过期时间(分钟)
 ```
 
 ## 同步已有数据

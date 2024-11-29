@@ -11,6 +11,8 @@ var (
 
 	ErrNoSuchItem = "no such item"
 
+	RedisFormatter = "alist-gallery:%s"
+
 	StorageFormatter = path.Join(config.CONFIG.StoragePath, "/%s/%s")
 
 	GalleryFormatter, _ = url.JoinPath(config.CONFIG.GalleryLocation, "/fs/show-gallery/")

@@ -37,8 +37,15 @@ port: 5243  # alist-gallery service port
 alist-host: https://assets.example.com # alist domain
 gallery-location: https://assets.example.com:5243 # alist-gallery service location
 storage-path: /Storage/Gallery # The path where the graph bed is stored in the alist
-alist-token: alist-4254afdc-1acg-1999-08aa-b6134kx4kv63FdkHJFPeaFDdEGYmSe29KETy4fdsareKM8fdsagfdsgfdgfdagdfgr # alist service token
+alist-token: alist-4254afdc-1acg-1999-08aa-... # alist service token
 password: "" # Folder password for storage path (optional)
+redis:
+  enable: true    # Specifies whether to enable Redis caching
+  host: 127.0.0.1 # Redis host
+  port: 6379      # Redis port
+  database: 0     # RedisDB number
+  password: ""    # Redis password
+  timeout: 60     # Cache expiration time (minutes)
 ```
 
 ## Synchronize existing data
