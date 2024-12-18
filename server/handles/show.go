@@ -23,6 +23,7 @@ func ShowImage(c echo.Context) error {
 	cacheKey := fmt.Sprintf(common.RedisFormatter, name)
 	cachedImage := db.RedisGet(cacheKey)
 	if cachedImage != "" {
+		c.Response().Header().Set("Cache-Control", "public, max-age=2592000")
 		return c.Blob(http.StatusOK, "image/png", []byte(cachedImage))
 	}
 
@@ -44,6 +45,7 @@ func ShowImage(c echo.Context) error {
 
 	db.RedisSet(cacheKey, string(image), time.Duration(config.CONFIG.Redis.Timeout)*time.Minute)
 
+	c.Response().Header().Set("Cache-Control", "public, max-age=2592000")
 	return c.Blob(http.StatusOK, "image/png", image)
 }
 
