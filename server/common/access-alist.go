@@ -2,16 +2,15 @@ package common
 
 import (
 	"alist-gallery/config"
+	"alist-gallery/internal/net"
 	"errors"
-	"github.com/go-resty/resty/v2"
 	"github.com/tidwall/gjson"
 	"io"
 	"mime/multipart"
 )
 
 func GetUserName(authorization string) (string, error) {
-	client := resty.New()
-	r, err := client.R().
+	r, err := net.GlobalClient.R().
 		SetHeader("Authorization", authorization).
 		Get(ApiMe)
 
@@ -37,8 +36,7 @@ func FsGet(path string) (string, error) {
 		"refresh":  false,
 	}
 
-	client := resty.New()
-	r, err := client.R().
+	r, err := net.GlobalClient.R().
 		SetHeader("Authorization", config.CONFIG.AListToken).
 		SetBody(reqBody).
 		Post(ApiFsGet)
@@ -60,8 +58,7 @@ func FsFrom(filePath, asTask string, f multipart.File) ([]byte, error) {
 	headers["Content-Type"] = "multipart/form-data;"
 	headers["Authorization"] = config.CONFIG.AListToken
 
-	client := resty.New()
-	r, err := client.R().
+	r, err := net.GlobalClient.R().
 		SetHeaders(headers).
 		SetFileReader("file", "name.png", f).
 		Put(ApiFsForm)
@@ -81,8 +78,7 @@ func FsStream(filePath, asTask string, f io.ReadCloser) ([]byte, error) {
 	headers["File-Path"] = filePath
 	headers["Authorization"] = config.CONFIG.AListToken
 
-	client := resty.New()
-	r, err := client.R().
+	r, err := net.GlobalClient.R().
 		SetHeaders(headers).
 		SetBody(f).
 		Put(ApiFsPut)
@@ -106,8 +102,7 @@ func FsSearch(name string) ([]byte, error) {
 		"keywords": name,
 	}
 
-	client := resty.New()
-	r, err := client.R().
+	r, err := net.GlobalClient.R().
 		SetHeader("Authorization", config.CONFIG.AListToken).
 		SetBody(reqBody).
 		Post(ApiFsSearch)
@@ -130,8 +125,7 @@ func Refresh() {
 		"max_depth": 20,
 	}
 
-	client := resty.New()
-	_, _ = client.R().
+	_, _ = net.GlobalClient.R().
 		SetHeader("Authorization", config.CONFIG.AListToken).
 		SetBody(reqBody).
 		Post(ApiIndexUpdate)

@@ -4,10 +4,10 @@ import (
 	"alist-gallery/config"
 	"alist-gallery/internal/db"
 	"alist-gallery/internal/model"
+	"alist-gallery/internal/net"
 	"alist-gallery/server/common"
 	"errors"
 	"fmt"
-	"github.com/go-resty/resty/v2"
 	"github.com/labstack/echo/v4"
 	"github.com/tidwall/gjson"
 	"net/http"
@@ -17,7 +17,6 @@ import (
 
 // ShowImage 展示图床中图片（非下载）
 func ShowImage(c echo.Context) error {
-	client := resty.New()
 	name := c.Param("name")
 
 	cacheKey := fmt.Sprintf(common.RedisFormatter, name)
@@ -38,7 +37,7 @@ func ShowImage(c echo.Context) error {
 		}
 	}
 
-	image, err := loadImage(item.ImageURL, client)
+	image, err := loadImage(item.ImageURL)
 	if err != nil {
 		return c.JSON(http.StatusServiceUnavailable, map[string]interface{}{"message": err.Error()})
 	}
@@ -68,8 +67,8 @@ func searchImage(name string) (model.GalleryIndex, error) {
 	}, nil
 }
 
-func loadImage(imageLink string, client *resty.Client) ([]byte, error) {
-	image, err := client.R().Get(imageLink)
+func loadImage(imageLink string) ([]byte, error) {
+	image, err := net.GlobalClient.R().Get(imageLink)
 	if err != nil {
 		return nil, errors.New("alist-gallery service error")
 	}
