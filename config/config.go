@@ -17,6 +17,7 @@ type Config struct {
 	StoragePath     string      `yaml:"storage-path"`
 	AListToken      string      `yaml:"alist-token"`
 	Password        string      `yaml:"password"`
+	Compression     int         `yaml:"compression"`
 	Redis           RedisConfig `yaml:"redis"`
 }
 type RedisConfig struct {
@@ -58,6 +59,7 @@ func initDefaultConfig() {
 		StoragePath:     "https://assets.example.com:5243",
 		AListToken:      "alist-4254afdc-1acg-1999-08aa-...",
 		Password:        "can be empty",
+		Compression:     0,
 		Redis: RedisConfig{
 			Enable:   false,
 			Host:     "127.0.0.1",

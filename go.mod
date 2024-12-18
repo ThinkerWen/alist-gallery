@@ -3,6 +3,7 @@ module alist-gallery
 go 1.22
 
 require (
+	github.com/chai2010/webp v1.1.1
 	github.com/charmbracelet/log v0.4.0
 	github.com/go-resty/resty/v2 v2.14.0
 	github.com/labstack/echo/v4 v4.12.0
@@ -35,6 +36,6 @@ require (
 	golang.org/x/exp v0.0.0-20231006140011-7918f672742d // indirect
 	golang.org/x/net v0.27.0 // indirect
 	golang.org/x/sys v0.22.0 // indirect
-	golang.org/x/text v0.16.0 // indirect
+	golang.org/x/text v0.21.0 // indirect
 	golang.org/x/time v0.6.0 // indirect
 )
