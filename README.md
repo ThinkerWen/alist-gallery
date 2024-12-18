@@ -41,6 +41,7 @@ gallery-location: https://assets.example.com:5243 # alist-gallery服务地址
 storage-path: /Storage/Gallery # 图床在alist中的存储路径
 alist-token: alist-4254afdc-1acg-1999-08aa-... # alist服务token
 password: "" # 存储路径的文夹及密码(可选)
+compression: 0 # 是否开启webp图片压缩(加快访问速度，0不开启，0~100)
 redis:
   enable: true    # 是否开启Redis缓存
   host: 127.0.0.1 # Redis连接地址
