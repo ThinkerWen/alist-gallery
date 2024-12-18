@@ -58,7 +58,9 @@ func ShowImage(c echo.Context) error {
 		return c.JSON(http.StatusServiceUnavailable, map[string]interface{}{"message": err.Error()})
 	}
 
-	db.RedisSet(cacheKey, string(img), time.Duration(config.CONFIG.Redis.Timeout)*time.Minute)
+	if len(img) > 1024 {
+		db.RedisSet(cacheKey, string(img), time.Duration(config.CONFIG.Redis.Timeout)*time.Minute)
+	}
 	img, contentType, err := compressImageToWebP([]byte(cachedImage), quality)
 	if err != nil {
 		return c.JSON(http.StatusServiceUnavailable, map[string]interface{}{"message": err.Error()})
