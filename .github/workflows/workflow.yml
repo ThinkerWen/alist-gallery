@@ -53,11 +53,6 @@ jobs:
         run: |
           mkdir -p dist
           export CGO_ENABLED=1
-          if [[ $GOOS == "darwin" ]]; then
-            export CC=clang
-          else
-            export CC=musl-gcc
-          fi
           GOOS=darwin GOARCH=amd64 go build -o dist/alist-gallery-darwin-amd64-${{ github.ref_name }}
           GOOS=linux GOARCH=amd64 go build -o dist/alist-gallery-linux-amd64-${{ github.ref_name }}
           GOOS=windows GOARCH=amd64 go build -o dist/alist-gallery-windows-amd64-${{ github.ref_name }}.exe
