@@ -30,6 +30,11 @@ jobs:
         with:
           string: ${{ github.repository_owner }}
 
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libwebp-dev
+
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
         with:
