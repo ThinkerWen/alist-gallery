@@ -33,7 +33,7 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y libwebp-dev musl-dev gcc musl-tools
+          sudo apt-get install -y libwebp-dev musl-dev gcc musl-tools gcc-multilib gcc-mingw-w64
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
@@ -53,7 +53,6 @@ jobs:
         run: |
           mkdir -p dist
           export CGO_ENABLED=1
-          GOOS=darwin GOARCH=amd64 go build -o dist/alist-gallery-darwin-amd64-${{ github.ref_name }}
           GOOS=linux GOARCH=amd64 go build -o dist/alist-gallery-linux-amd64-${{ github.ref_name }}
           GOOS=windows GOARCH=amd64 go build -o dist/alist-gallery-windows-amd64-${{ github.ref_name }}.exe
 
